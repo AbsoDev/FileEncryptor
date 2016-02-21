@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include "crypto.h"
 
 enum RETURN_CODE
 {
@@ -43,6 +44,9 @@ int main(int argc, char** argv)
     bool has_in_file = false;
     bool has_out_file = false;
     bool has_key_file = false;
+    char* in_file;
+    char* out_file;
+    char* key_file;
     std::string report_message;
     int rc = RETURN_CODE_OK;
 
@@ -80,6 +84,7 @@ int main(int argc, char** argv)
             else
             {
                 has_in_file = true;
+                in_file = argv[i];
             }
             state = ReadState::Normal;
             break;
@@ -93,6 +98,7 @@ int main(int argc, char** argv)
             else
             {
                 has_out_file = true;
+                out_file = argv[i];
             }
             state = ReadState::Normal;
             break;
@@ -106,6 +112,7 @@ int main(int argc, char** argv)
             else
             {
                 has_key_file = true;
+                key_file = argv[i];
             }
             state = ReadState::Normal;
             break;
@@ -134,6 +141,9 @@ int main(int argc, char** argv)
     if (rc == RETURN_CODE_OK)
     {
         std::cout << "doing encryption" << std::endl;
+        AES t = AES();
+        int ans = t.nice(in_file);
+        std::cout << ans << std::endl;
     }
     else
     {
