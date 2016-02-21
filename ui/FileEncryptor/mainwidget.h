@@ -34,7 +34,7 @@ private slots:
     void on_lineEditOutFile_textChanged();
 
 signals:
-    void lastFilePath_textChanged();
+
 
 private:
     Ui::MainWidget *ui;
