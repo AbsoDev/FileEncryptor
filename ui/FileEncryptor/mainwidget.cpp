@@ -15,8 +15,8 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->setupUi(this);
     QPixmap mainPic(":/new/main/Pictures/mainPic.jpg");
 
-//    QObject::connect(this, SIGNAL(lastFilePath_textChanged()),
-//                     this, SLOT(on_lineEditOutFile_textChanged()));
+    QObject::connect(this, SIGNAL(lastFilePathChanged()),
+                     this, SLOT(on_lineEditOutFile_textChanged()));
 
     int h = ui->labelProfilePicture->height();
     int w = ui->labelProfilePicture->width();
@@ -40,6 +40,7 @@ void MainWidget::on_pushButtonBrowseTargetFile_clicked()
                                                    startFilePath
                                                    );
     _lastFilePath = fileDialog.directory().absolutePath();
+    emit lastFilePathChanged();
     std::cout << std::endl << "Selected file path " << _targetFilePath.toStdString();
     std::cout << std::endl << "Last file path" << _lastFilePath.toStdString();
 }
@@ -54,6 +55,7 @@ void MainWidget::on_pushButtonBrowsePassFile_clicked()
                                                      startFilePath
                                                      );
     _lastFilePath = fileDialog.directory().absolutePath();
+    emit lastFilePathChanged();
     std::cout << std::endl << "Selected file path " << _passwordFilePath.toStdString();
     std::cout << std::endl << "Last file path" << _lastFilePath.toStdString();
 }
@@ -62,14 +64,9 @@ void MainWidget::on_pushButtonEncrypt_clicked()
 {
 }
 
-void MainWidget::lastFilePath_textChanged()
-{
-}
-
 void MainWidget::on_lineEditOutFile_textChanged()
 {
     if (!_passwordFilePath.isEmpty() && !_targetFilePath.isEmpty()) {
         ui->lineEditOutFile->setText(_lastFilePath);
     }
-    emit lastFilePath_textChanged();
 }
