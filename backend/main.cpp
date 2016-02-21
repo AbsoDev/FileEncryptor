@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include "crypto.h"
 
 enum RETURN_CODE
 {
@@ -8,8 +9,9 @@ enum RETURN_CODE
     RETURN_CODE_INPUT_FILE_ERROR = 1,
     RETURN_CODE_OUTPUT_FILE_ERROR = 2,
     RETURN_CODE_KEY_FILE_ERROR = 3,
-    RETURN_CODE_ENCRYPTION_ERROR = 4,
-    RETURN_CODE_WRONG_ARGUMENT = 5,
+    RETURN_CODE_WRONG_ARGUMENT = 4,
+    RETURN_CODE_ENCRYPTION_ERROR = 5,
+    RETURN_CODE_DECRYPTION_ERROR = 6,
 };
 
 enum class ReadState
@@ -23,6 +25,8 @@ enum class ReadState
 static const char* INFILE_ARG = "-i";
 static const char* OUTFILE_ARG = "-o";
 static const char* KEYFILE_ARG = "-k";
+static const char* ENCRYPT_ARG = "-e";
+static const char* DECRYPT_ARG = "-d";
 
 static bool FileExists(const char* fileName)
 {
@@ -43,6 +47,10 @@ int main(int argc, char** argv)
     bool has_in_file = false;
     bool has_out_file = false;
     bool has_key_file = false;
+    bool encrypt = false, decrypt = false;
+    char* in_file;
+    char* out_file;
+    char* key_file;
     std::string report_message;
     int rc = RETURN_CODE_OK;
 
@@ -63,6 +71,14 @@ int main(int argc, char** argv)
             {
                 state = ReadState::KeyFile;
             }
+            else if (strcmp(ENCRYPT_ARG, argv[i]) == 0)
+            {
+                encrypt = true;
+            }
+            else if (strcmp(DECRYPT_ARG, argv[i]) == 0)
+            {
+                decrypt = true;
+            }
             else
             {
                 report_message = "Unknown argument: ";
@@ -80,6 +96,7 @@ int main(int argc, char** argv)
             else
             {
                 has_in_file = true;
+                in_file = argv[i];
             }
             state = ReadState::Normal;
             break;
@@ -93,6 +110,7 @@ int main(int argc, char** argv)
             else
             {
                 has_out_file = true;
+                out_file = argv[i];
             }
             state = ReadState::Normal;
             break;
@@ -106,6 +124,7 @@ int main(int argc, char** argv)
             else
             {
                 has_key_file = true;
+                key_file = argv[i];
             }
             state = ReadState::Normal;
             break;
@@ -129,11 +148,30 @@ int main(int argc, char** argv)
             report_message = "KeyFile parameter missing";
             rc = RETURN_CODE_WRONG_ARGUMENT;
         }
+        else if (!encrypt and !decrypt)
+        {
+            report_message = "Method missing (encrypt or decrypt)";
+            rc = RETURN_CODE_WRONG_ARGUMENT;
+        }
+        else if (encrypt and decrypt)
+        {
+            report_message = "Both methods present";
+            rc = RETURN_CODE_WRONG_ARGUMENT;
+        }
     }
 
     if (rc == RETURN_CODE_OK)
     {
-        std::cout << "doing encryption" << std::endl;
+        if (encrypt)
+        {
+            int response = encrypt_file(in_file, out_file, key_file);
+            std::cout << "response: " << response << std::endl;
+        }
+        else
+        {
+            int response = decrypt_file(in_file, out_file, key_file);
+            std::cout << "response: " << response << std::endl;
+        }
     }
     else
     {
