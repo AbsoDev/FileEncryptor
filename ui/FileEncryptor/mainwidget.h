@@ -35,9 +35,16 @@ private slots:
 
     void on_lineEditTargetFile_textChanged();
 
+    void on_checkBoxToggleEncryptDecrypt_stateChanged();
+
+    void toggleEncryptDecrypt(bool encrypt);
+
 signals:
     void lastFilePathChanged();
+
     void targetFilePathChanged();
+
+    void checkBoxToggle(bool encrypt);
 
 private:
     Ui::MainWidget *ui;

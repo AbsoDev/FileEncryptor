@@ -6,6 +6,7 @@
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
+    _targetFileName(""),
     _targetFilePath(""),
     _passwordFilePath(""),
     _outputFilePath(""),
@@ -19,6 +20,9 @@ MainWidget::MainWidget(QWidget *parent) :
                      this, SLOT(on_lineEditOutFile_textChanged()));
     QObject::connect(this, SIGNAL(targetFilePathChanged()),
                      this, SLOT(on_lineEditTargetFile_textChanged()));
+    QObject::connect(this, SIGNAL(checkBoxToggle(bool)),
+                     this, SLOT(toggleEncryptDecrypt(bool)));
+
 
     int h = ui->labelProfilePicture->height();
     int w = ui->labelProfilePicture->width();
@@ -72,5 +76,28 @@ void MainWidget::on_lineEditTargetFile_textChanged()
 {
     if (!_targetFilePath.isEmpty()) {
         ui->lineEditTargetFile->setText(_targetFilePath);
+    }
+}
+
+void MainWidget::toggleEncryptDecrypt(bool encrypt)
+{
+    if (encrypt) {
+        ui->pushButtonBrowseTargetFile->setText("Select file to encrypt");
+        ui->pushButtonEncrypt->setText("Encrypt");
+    }
+    else {
+        ui->pushButtonBrowseTargetFile->setText("Select file to decrypt");
+        ui->pushButtonEncrypt->setText("Decrypt");
+    }
+}
+
+
+void MainWidget::on_checkBoxToggleEncryptDecrypt_stateChanged()
+{
+    if (ui->checkBoxToggleEncryptDecrypt->isChecked()) {
+        emit checkBoxToggle(true);
+    }
+    else {
+        emit checkBoxToggle(false);
     }
 }
