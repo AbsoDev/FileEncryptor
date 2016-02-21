@@ -19,6 +19,8 @@ public:
     ~MainWidget();
 
 protected:
+    QString _targetFileName;
+
     QString _targetFilePath;
     QString _passwordFilePath;
     QString _outputFilePath;
@@ -27,14 +29,15 @@ protected:
 private slots:
     void on_pushButtonBrowseTargetFile_clicked();
 
-    void on_pushButtonBrowsePassFile_clicked();
-
     void on_pushButtonEncrypt_clicked();
 
     void on_lineEditOutFile_textChanged();
 
-signals:
+    void on_lineEditTargetFile_textChanged();
 
+signals:
+    void lastFilePathChanged();
+    void targetFilePathChanged();
 
 private:
     Ui::MainWidget *ui;

@@ -17,6 +17,8 @@ MainWidget::MainWidget(QWidget *parent) :
 
     QObject::connect(this, SIGNAL(lastFilePathChanged()),
                      this, SLOT(on_lineEditOutFile_textChanged()));
+    QObject::connect(this, SIGNAL(targetFilePathChanged()),
+                     this, SLOT(on_lineEditTargetFile_textChanged()));
 
     int h = ui->labelProfilePicture->height();
     int w = ui->labelProfilePicture->width();
@@ -32,32 +34,21 @@ MainWidget::~MainWidget()
 
 void MainWidget::on_pushButtonBrowseTargetFile_clicked()
 {
-    QString startFilePath = _lastFilePath.isEmpty() ? "~" : _lastFilePath;
+    QString startFilePath = _lastFilePath.isEmpty() ? QDir::homePath() : _lastFilePath;
     QFileDialog fileDialog;
 
     _targetFilePath = fileDialog.getOpenFileName(this,
-                                                   tr("Select Target File"),
-                                                   startFilePath
-                                                   );
-    _lastFilePath = fileDialog.directory().absolutePath();
+                                                 tr("Select Target File"),
+                                                 startFilePath);
+    QFileInfo targetFileInfo(_targetFilePath);
+    _lastFilePath = targetFileInfo.absolutePath();
+    _targetFileName = targetFileInfo.fileName();
+
     emit lastFilePathChanged();
+    emit targetFilePathChanged();
     std::cout << std::endl << "Selected file path " << _targetFilePath.toStdString();
-    std::cout << std::endl << "Last file path" << _lastFilePath.toStdString();
-}
+    std::cout << std::endl << "fileDialog.directory.path " << _lastFilePath.toStdString();
 
-void MainWidget::on_pushButtonBrowsePassFile_clicked()
-{
-    QString startFilePath = _lastFilePath.isEmpty() ? "~" : _lastFilePath;
-    QFileDialog fileDialog;
-
-    _passwordFilePath = fileDialog.getOpenFileName(this,
-                                                     tr("Select Password File"),
-                                                     startFilePath
-                                                     );
-    _lastFilePath = fileDialog.directory().absolutePath();
-    emit lastFilePathChanged();
-    std::cout << std::endl << "Selected file path " << _passwordFilePath.toStdString();
-    std::cout << std::endl << "Last file path" << _lastFilePath.toStdString();
 }
 
 void MainWidget::on_pushButtonEncrypt_clicked()
@@ -66,7 +57,20 @@ void MainWidget::on_pushButtonEncrypt_clicked()
 
 void MainWidget::on_lineEditOutFile_textChanged()
 {
-    if (!_passwordFilePath.isEmpty() && !_targetFilePath.isEmpty()) {
-        ui->lineEditOutFile->setText(_lastFilePath);
+    if (!_targetFilePath.isEmpty()) {
+        QString outFilePath;
+#ifdef Q_OS_MSDOS
+        outFilePath = QString("%1\\%2.enc").arg(_lastFilePath).arg(_targetFileName);
+#else
+        outFilePath = QString("%1/%2.enc").arg(_lastFilePath).arg(_targetFileName);
+#endif
+        ui->lineEditOutFile->setText(outFilePath);
+    }
+}
+
+void MainWidget::on_lineEditTargetFile_textChanged()
+{
+    if (!_targetFilePath.isEmpty()) {
+        ui->lineEditTargetFile->setText(_targetFilePath);
     }
 }
