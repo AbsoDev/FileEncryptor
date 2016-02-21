@@ -9,7 +9,7 @@ Setup instructions for [Linux](https://www.cryptopp.com/wiki/Linux#Build_and_Ins
 
 Compile:
 ```
-g++ -o exec ./main.cpp ./crypto.cpp -std=c++11 -I PATH_TO_CRYPTOPP -Lcryptopp-master -l:libcryptopp.a
+g++ -o exec ./main.cpp ./crypto.cpp -std=c++11 -I PATH_TO_CRYPTOPP_MASTER -Lcryptopp-master -l:libcryptopp.a
 ```
 Run Encryption:
 ```
