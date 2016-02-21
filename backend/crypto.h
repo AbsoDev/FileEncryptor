@@ -1,14 +1,7 @@
 #ifndef CRYPTO_H_
 #define CRYPTO_H_
 
-class FileReader
-{
-    public:
-        int len;
-        char* bytes;
-
-        void read_bytes(const char*);
-};
+void read_bytes(const char*, char*, int&);
 
 class AES
 {
