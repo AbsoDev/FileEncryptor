@@ -1,12 +1,14 @@
 #ifndef CRYPTO_H_
 #define CRYPTO_H_
 
-void read_bytes(const char*, char*, int&);
+#include "files.h"
+
+void read_bytes(const char*, byte*, int&);
 
 class AES
 {
     public:
-        int nice(const char*, const char*);
+        int nice(const char*, const char*, const char*);
 };
 
 #endif

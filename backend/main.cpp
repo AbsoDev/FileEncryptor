@@ -142,7 +142,7 @@ int main(int argc, char** argv)
     {
         std::cout << "doing encryption" << std::endl;
         AES t = AES();
-        int ans = t.nice(in_file, out_file);
+        int ans = t.nice(in_file, out_file, key_file);
         std::cout << ans << std::endl;
     }
     else
