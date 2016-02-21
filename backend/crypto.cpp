@@ -6,6 +6,7 @@
 #include "modes.h"
 #include "aes.h"
 #include "filters.h"
+#include "files.h"
 
 
 void FileReader::read_bytes(char const* filename)
@@ -21,28 +22,20 @@ void FileReader::read_bytes(char const* filename)
 }
 
 
-int AES::nice(char const* filename)
+int AES::nice(char const* in_file, char const* out_file)
 {
     FileReader fr = FileReader();
-    fr.read_bytes(filename);
+    fr.read_bytes(in_file);
 
-    byte key[ CryptoPP::AES::DEFAULT_KEYLENGTH ], iv[ CryptoPP::AES::BLOCKSIZE ];
-    memset( key, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH );
-    memset( iv, 0x00, CryptoPP::AES::BLOCKSIZE );
-
-    std::string ciphertext;
+    byte key[CryptoPP::AES::DEFAULT_KEYLENGTH], iv[CryptoPP::AES::BLOCKSIZE];
+    memset(key, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
+    memset(iv, 0x00, CryptoPP::AES::BLOCKSIZE);
 
     CryptoPP::AES::Encryption aesEncryption(key, CryptoPP::AES::DEFAULT_KEYLENGTH);
-    CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption( aesEncryption, iv );
-    CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink( ciphertext ) );
-    stfEncryptor.Put( reinterpret_cast<const unsigned char*>( fr.bytes ), fr.len+1 );
+    CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption, iv);
+    CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::FileSink(out_file));
+    stfEncryptor.Put(reinterpret_cast<const unsigned char*>(fr.bytes), fr.len+1);
     stfEncryptor.MessageEnd();
 
-    std::cout << "Cipher Text (" << ciphertext.size() << " bytes)" << std::endl;
-    for( int i = 0; i < ciphertext.size(); i++ ) {
-
-        std::cout << "0x" << std::hex << (0xFF & static_cast<byte>(ciphertext[i])) << " ";
-    }
-    std::cout << std::hex << std::endl << std::endl;
     return 0;
 }

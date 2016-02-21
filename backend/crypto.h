@@ -13,7 +13,7 @@ class FileReader
 class AES
 {
     public:
-        int nice(const char*);
+        int nice(const char*, const char*);
 };
 
 #endif
