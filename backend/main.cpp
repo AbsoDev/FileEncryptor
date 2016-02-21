@@ -140,8 +140,9 @@ int main(int argc, char** argv)
 
     if (rc == RETURN_CODE_OK)
     {
-        std::cout << "doing encryptio.." << std::endl;
+        std::cout << "doing encryption.." << std::endl;
         int response = encrypt_file(in_file, out_file, key_file);
+        //int response = decrypt_file(in_file, out_file, key_file);
         std::cout << "response: " << response << std::endl;
     }
     else

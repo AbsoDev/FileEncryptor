@@ -3,8 +3,7 @@
 
 #include "files.h"
 
-void read_bytes(const char*, byte*, int&);
-
 int encrypt_file(const char*, const char*, const char*);
+int decrypt_file(const char*, const char*, const char*);
 
 #endif
