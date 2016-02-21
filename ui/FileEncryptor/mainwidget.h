@@ -6,6 +6,11 @@
 #include <QWidget>
 #include <QString>
 
+const QString targetEncryptText = "Select file to encrypt";
+const QString targetDecryptText = "Select file to decrypt";
+const QString buttonEncryptText = "Encrypt";
+const QString buttonDecryptText = "Decrypt";
+
 namespace Ui {
 class MainWidget;
 }

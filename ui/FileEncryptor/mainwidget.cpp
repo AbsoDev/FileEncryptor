@@ -4,6 +4,7 @@
 #include <iostream>
 #include <QPainter>
 
+
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
     _targetFileName(""),
@@ -14,7 +15,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
-    QPixmap mainPic(":/new/main/Pictures/mainPic.jpg");
+    QPixmap mainPic(":/new/main/GPLpicture.png");
 
     QObject::connect(this, SIGNAL(lastFilePathChanged()),
                      this, SLOT(on_lineEditOutFile_textChanged()));
@@ -50,8 +51,6 @@ void MainWidget::on_pushButtonBrowseTargetFile_clicked()
 
     emit lastFilePathChanged();
     emit targetFilePathChanged();
-    std::cout << std::endl << "Selected file path " << _targetFilePath.toStdString();
-    std::cout << std::endl << "fileDialog.directory.path " << _lastFilePath.toStdString();
 
 }
 
@@ -82,12 +81,12 @@ void MainWidget::on_lineEditTargetFile_textChanged()
 void MainWidget::toggleEncryptDecrypt(bool encrypt)
 {
     if (encrypt) {
-        ui->pushButtonBrowseTargetFile->setText("Select file to encrypt");
-        ui->pushButtonEncrypt->setText("Encrypt");
+        ui->pushButtonBrowseTargetFile->setText(targetEncryptText);
+        ui->pushButtonEncrypt->setText(buttonEncryptText);
     }
     else {
-        ui->pushButtonBrowseTargetFile->setText("Select file to decrypt");
-        ui->pushButtonEncrypt->setText("Decrypt");
+        ui->pushButtonBrowseTargetFile->setText(targetDecryptText);
+        ui->pushButtonEncrypt->setText(buttonDecryptText);
     }
 }
 

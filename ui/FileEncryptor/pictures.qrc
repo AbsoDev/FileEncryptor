@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/new/main">
-        <file>Pictures/mainPic.jpg</file>
+        <file>GPLpicture.png</file>
     </qresource>
 </RCC>
