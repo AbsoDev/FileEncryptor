@@ -5,10 +5,6 @@
 
 void read_bytes(const char*, byte*, int&);
 
-class AES
-{
-    public:
-        int nice(const char*, const char*, const char*);
-};
+int encrypt_file(const char*, const char*, const char*);
 
 #endif

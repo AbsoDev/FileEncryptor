@@ -22,7 +22,7 @@ void read_bytes(char const* filename, byte* bytes, int& len)
 }
 
 
-int AES::nice(char const* in_file, char const* out_file, char const* key_file)
+int encrypt_file(char const* in_file, char const* out_file, char const* key_file)
 {
     byte* bytes;
     int file_len;
