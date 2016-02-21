@@ -2,7 +2,7 @@
 #include <string>
 #include <cstring>
 
-enum RETURN_CODE 
+enum RETURN_CODE
 {
     RETURN_CODE_OK = 0,
     RETURN_CODE_INPUT_FILE_ERROR = 1,
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     bool has_key_file = false;
     std::string report_message;
     int rc = RETURN_CODE_OK;
-    
+
     for (int i = 1; i < argc && rc == RETURN_CODE_OK; i++)
     {
         switch (state)
@@ -81,6 +81,7 @@ int main(int argc, char** argv)
             {
                 has_in_file = true;
             }
+            state = ReadState::Normal;
             break;
         case ReadState::OutFile:
             if (FileExists(argv[i]))
@@ -93,6 +94,7 @@ int main(int argc, char** argv)
             {
                 has_out_file = true;
             }
+            state = ReadState::Normal;
             break;
         case ReadState::KeyFile:
             if (FileExists(argv[i]) == false)
@@ -105,10 +107,11 @@ int main(int argc, char** argv)
             {
                 has_key_file = true;
             }
+            state = ReadState::Normal;
             break;
         }
     }
-    
+
     if (rc == RETURN_CODE_OK)
     {
         if (has_in_file == false)
@@ -127,11 +130,15 @@ int main(int argc, char** argv)
             rc = RETURN_CODE_WRONG_ARGUMENT;
         }
     }
-    
-    if (rc != RETURN_CODE_OK)
+
+    if (rc == RETURN_CODE_OK)
     {
-        std::cout << report_message;
+        std::cout << "doing encryption" << std::endl;
     }
-    
+    else
+    {
+        std::cout << report_message << std::endl;
+    }
+
     return rc;
 }
