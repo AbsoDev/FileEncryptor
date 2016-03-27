@@ -3,7 +3,6 @@
 #include "aes.h"
 #include "files.h"
 #include "osrng.h"
-#include "hex.h"
 #include <ios>
 #include <fstream>
 
