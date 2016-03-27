@@ -26,7 +26,7 @@ int encrypt_file(char const* in_file, char const* out_file, char const* key_file
     CryptoPP::FileSource fs(key_file, new CryptoPP::StringSink(key));
 
     // write iv
-    for(int i = 0; i < 16; i++) fout << iv[i];
+    for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; i++) fout << iv[i];
 
     // perform encryption and write cyphertext
     CryptoPP::AES::Encryption aesEncryption((byte*)key.data(), KEY_LENGTH);
@@ -49,7 +49,7 @@ int decrypt_file(char const* in_file, char const* out_file, char const* key_file
 
     // read iv
     byte iv[CryptoPP::AES::BLOCKSIZE];
-    for(int i = 0; i < 16; i++) fin >> iv[i];
+    for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; i++) fin >> iv[i];
 
     // read key from keyfile
     std::string key;
