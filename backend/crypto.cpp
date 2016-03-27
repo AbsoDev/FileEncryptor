@@ -7,6 +7,10 @@
 #include <fstream>
 
 
+// 256bit
+const int KEY_LENGTH = 32;
+
+
 int encrypt_file(char const* in_file, char const* out_file, char const* key_file)
 {
     // open output
@@ -25,7 +29,7 @@ int encrypt_file(char const* in_file, char const* out_file, char const* key_file
     for(int i = 0; i < 16; i++) fout << iv[i];
 
     // perform encryption and write cyphertext
-    CryptoPP::AES::Encryption aesEncryption((byte*)key.data(), CryptoPP::AES::DEFAULT_KEYLENGTH);
+    CryptoPP::AES::Encryption aesEncryption((byte*)key.data(), KEY_LENGTH);
     CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption, iv);
     CryptoPP::FileSource file_source(in_file, true,
         new CryptoPP::StreamTransformationFilter(cbcEncryption,
@@ -52,7 +56,7 @@ int decrypt_file(char const* in_file, char const* out_file, char const* key_file
     CryptoPP::FileSource fs(key_file, new CryptoPP::StringSink(key));
 
     // perform decryption and write decrypted text
-    CryptoPP::AES::Decryption aesDecryption((byte*)key.data(), CryptoPP::AES::DEFAULT_KEYLENGTH);
+    CryptoPP::AES::Decryption aesDecryption((byte*)key.data(), KEY_LENGTH);
     CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption, iv);
     CryptoPP::FileSource file_source(fin, true,
         new CryptoPP::StreamTransformationFilter(cbcDecryption,
