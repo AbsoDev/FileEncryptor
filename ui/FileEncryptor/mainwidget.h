@@ -1,10 +1,9 @@
 #pragma once
 
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
-
 #include <QWidget>
 #include <QString>
+#include <QProcess>
+#include <QtDebug>
 
 const QString targetEncryptText = "Select file to encrypt";
 const QString targetDecryptText = "Select file to decrypt";
@@ -31,6 +30,12 @@ protected:
     QString _outputFilePath;
     QString _lastFilePath;
 
+    bool _encryptEnabled;
+
+    // === backend support ===
+    QProcess *_backendProcess;
+    QString _pathToBackendExec;
+
 private slots:
     void on_pushButtonBrowseTargetFile_clicked();
 
@@ -40,9 +45,20 @@ private slots:
 
     void on_lineEditTargetFile_textChanged();
 
-    void on_checkBoxToggleEncryptDecrypt_stateChanged();
+    void on_comboBoxEncryptDecrypt_currentIndexChanged(int index);
 
     void toggleEncryptDecrypt(bool encrypt);
+
+    void encrypt();
+
+    void decrypt();
+
+    // === backend signal handling ===
+    void notifyBackendStart();
+
+    void handleBackendError(QProcess::ProcessError error);
+
+    void handleBackendStop(int exitCode, QProcess::ExitStatus exitStatus);
 
 signals:
     void lastFilePathChanged();
@@ -54,5 +70,3 @@ signals:
 private:
     Ui::MainWidget *ui;
 };
-
-#endif // MAINWIDGET_H
