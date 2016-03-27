@@ -3,7 +3,7 @@
 
 #include <string>
 
-int password_to_key(const char*, std::string);
+std::string file_hash(const char*);
 int encrypt_file(const char*, const char*, const char*);
 int decrypt_file(const char*, const char*, const char*);
 
