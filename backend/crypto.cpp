@@ -13,11 +13,11 @@ static const int KEY_LENGTH = 32;
 
 
 // transforms password stored in file, to 32byte key through SHA256
-std::string password_to_key(char const* key_file)
+std::string password_to_key(char const* pass_file)
 {
     std::string key;
     CryptoPP::SHA256 sha256;
-    CryptoPP::FileSource fs(key_file, true,
+    CryptoPP::FileSource fs(pass_file, true,
         new CryptoPP::HashFilter(sha256,
             new CryptoPP::StringSink(key)
         )
@@ -25,7 +25,7 @@ std::string password_to_key(char const* key_file)
     return key;
 }
 
-int encrypt_file(char const* in_file, char const* out_file, char const* key_file)
+int encrypt_file(char const* in_file, char const* out_file, char const* pass_file)
 {
     // open output
     std::ofstream fout(out_file, std::ios::binary);
@@ -37,7 +37,7 @@ int encrypt_file(char const* in_file, char const* out_file, char const* key_file
     rnd.GenerateBlock(iv, CryptoPP::AES::BLOCKSIZE);
 
     // make key from password file
-    std::string key = password_to_key(key_file);
+    std::string key = password_to_key(pass_file);
 
     // write iv
     for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; i++) fout << iv[i];
@@ -56,7 +56,7 @@ int encrypt_file(char const* in_file, char const* out_file, char const* key_file
     return 0;
 }
 
-int decrypt_file(char const* in_file, char const* out_file, char const* key_file)
+int decrypt_file(char const* in_file, char const* out_file, char const* pass_file)
 {
     // open input
     std::ifstream fin(in_file, std::ios::binary);
@@ -67,7 +67,7 @@ int decrypt_file(char const* in_file, char const* out_file, char const* key_file
     for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; i++) fin >> iv[i];
 
     // make key from password file
-    std::string key = password_to_key(key_file);
+    std::string key = password_to_key(pass_file);
 
     // perform decryption and write decrypted text
     CryptoPP::AES::Decryption aesDecryption((byte*)key.data(), KEY_LENGTH);
