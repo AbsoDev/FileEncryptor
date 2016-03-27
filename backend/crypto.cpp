@@ -15,6 +15,7 @@ int encrypt_file(char const* in_file, char const* out_file, char const* key_file
 {
     // open output
     std::ofstream fout(out_file, std::ios::binary);
+    if(!fout.is_open()) return -1;
 
     // initialize random iv
     byte iv[CryptoPP::AES::BLOCKSIZE];
@@ -46,6 +47,7 @@ int decrypt_file(char const* in_file, char const* out_file, char const* key_file
 {
     // open input
     std::ifstream fin(in_file, std::ios::binary);
+    if(!fin.is_open()) return -1;
 
     // read iv
     byte iv[CryptoPP::AES::BLOCKSIZE];
