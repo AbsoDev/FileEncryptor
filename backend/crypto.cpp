@@ -8,7 +8,7 @@
 
 
 // 256bit
-const int KEY_LENGTH = 32;
+static const int KEY_LENGTH = 32;
 
 
 int encrypt_file(char const* in_file, char const* out_file, char const* key_file)
