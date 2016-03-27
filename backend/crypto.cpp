@@ -11,7 +11,20 @@
 static const int KEY_LENGTH = 32;
 
 
-int encrypt_file(char const* in_file, char const* out_file, char const* key_file)
+// transforms password stored in file, to 32byte key through SHA256
+std::string password_to_key(char const* pass_file)
+{
+    std::string key;
+    CryptoPP::SHA256 sha256;
+    CryptoPP::FileSource fs(pass_file, true,
+        new CryptoPP::HashFilter(sha256,
+            new CryptoPP::StringSink(key)
+        )
+    );
+    return key;
+}
+
+int encrypt_file(char const* in_file, char const* out_file, char const* pass_file)
 {
     // open output
     std::ofstream fout(out_file, std::ios::binary);
@@ -22,9 +35,8 @@ int encrypt_file(char const* in_file, char const* out_file, char const* key_file
     CryptoPP::AutoSeededRandomPool rnd;
     rnd.GenerateBlock(iv, CryptoPP::AES::BLOCKSIZE);
 
-    // read key from keyfile
-    std::string key;
-    CryptoPP::FileSource fs(key_file, new CryptoPP::StringSink(key));
+    // make key from password file
+    std::string key = password_to_key(pass_file);
 
     // write iv
     for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; i++) fout << iv[i];
@@ -43,7 +55,7 @@ int encrypt_file(char const* in_file, char const* out_file, char const* key_file
     return 0;
 }
 
-int decrypt_file(char const* in_file, char const* out_file, char const* key_file)
+int decrypt_file(char const* in_file, char const* out_file, char const* pass_file)
 {
     // open input
     std::ifstream fin(in_file, std::ios::binary);
@@ -53,9 +65,8 @@ int decrypt_file(char const* in_file, char const* out_file, char const* key_file
     byte iv[CryptoPP::AES::BLOCKSIZE];
     for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; i++) fin >> iv[i];
 
-    // read key from keyfile
-    std::string key;
-    CryptoPP::FileSource fs(key_file, new CryptoPP::StringSink(key));
+    // make key from password file
+    std::string key = password_to_key(pass_file);
 
     // perform decryption and write decrypted text
     CryptoPP::AES::Decryption aesDecryption((byte*)key.data(), KEY_LENGTH);
