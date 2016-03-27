@@ -58,7 +58,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="pictures.qrc">:/new/main/Pictures/mainPic.jpg</pixmap>
+         <pixmap>:/new/main/Pictures/mainPic.jpg</pixmap>
         </property>
         <property name="scaledContents">
          <bool>false</bool>
@@ -78,7 +78,11 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLineEdit" name="lineEditTargetFile"/>
+         <widget class="QLineEdit" name="lineEditTargetFile">
+          <property name="placeholderText">
+           <string>No file selected</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="pushButtonBrowseTargetFile">
@@ -92,21 +96,23 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QLineEdit" name="lineEdit_2">
+         <widget class="QLineEdit" name="lineEditPassPhrase">
+          <property name="inputMask">
+           <string/>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
           <property name="echoMode">
            <enum>QLineEdit::Password</enum>
+          </property>
+          <property name="placeholderText">
+           <string>Password</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBoxToggleEncryptDecrypt">
-          <property name="text">
-           <string>Encrypt</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
+         <widget class="QComboBox" name="comboBoxEncryptDecrypt"/>
         </item>
        </layout>
       </item>
@@ -130,8 +136,6 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="pictures.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
