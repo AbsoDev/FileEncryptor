@@ -78,7 +78,11 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLineEdit" name="lineEditTargetFile"/>
+         <widget class="QLineEdit" name="lineEditTargetFile">
+          <property name="placeholderText">
+           <string>No file selected</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="pushButtonBrowseTargetFile">
@@ -93,8 +97,17 @@
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QLineEdit" name="lineEditPassPhrase">
+          <property name="inputMask">
+           <string/>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
           <property name="echoMode">
            <enum>QLineEdit::Password</enum>
+          </property>
+          <property name="placeholderText">
+           <string>Password</string>
           </property>
          </widget>
         </item>

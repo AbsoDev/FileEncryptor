@@ -14,7 +14,7 @@ MainWidget::MainWidget(QWidget *parent) :
     _outputFilePath(""),
     _lastFilePath(""),
     _encryptEnabled(true),
-    _pathToBackendExec("/Users/arbulgazar/AbsoDev/FileEncryptor/ui/encryptor"),
+    _pathToBackendExec("../../../../encryptor"),
     ui(new Ui::MainWidget)
 {
     _backendProcess = new QProcess(this);
