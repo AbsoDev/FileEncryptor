@@ -3,6 +3,7 @@
 #include "aes.h"
 #include "files.h"
 #include "osrng.h"
+#include "hex.h"
 #include <ios>
 #include <fstream>
 
@@ -10,6 +11,19 @@
 // 256bit
 static const int KEY_LENGTH = 32;
 
+
+// transforms password stored in file, to 32byte key through SHA256
+std::string password_to_key(char const* key_file)
+{
+    std::string key;
+    CryptoPP::SHA256 sha256;
+    CryptoPP::FileSource fs(key_file, true,
+        new CryptoPP::HashFilter(sha256,
+            new CryptoPP::StringSink(key)
+        )
+    );
+    return key;
+}
 
 int encrypt_file(char const* in_file, char const* out_file, char const* key_file)
 {
@@ -22,9 +36,8 @@ int encrypt_file(char const* in_file, char const* out_file, char const* key_file
     CryptoPP::AutoSeededRandomPool rnd;
     rnd.GenerateBlock(iv, CryptoPP::AES::BLOCKSIZE);
 
-    // read key from keyfile
-    std::string key;
-    CryptoPP::FileSource fs(key_file, new CryptoPP::StringSink(key));
+    // make key from password file
+    std::string key = password_to_key(key_file);
 
     // write iv
     for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; i++) fout << iv[i];
@@ -53,9 +66,8 @@ int decrypt_file(char const* in_file, char const* out_file, char const* key_file
     byte iv[CryptoPP::AES::BLOCKSIZE];
     for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; i++) fin >> iv[i];
 
-    // read key from keyfile
-    std::string key;
-    CryptoPP::FileSource fs(key_file, new CryptoPP::StringSink(key));
+    // make key from password file
+    std::string key = password_to_key(key_file);
 
     // perform decryption and write decrypted text
     CryptoPP::AES::Decryption aesDecryption((byte*)key.data(), KEY_LENGTH);
