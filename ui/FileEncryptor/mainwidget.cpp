@@ -22,9 +22,9 @@ MainWidget::MainWidget(QWidget *parent) :
     QPixmap mainPic(":/new/main/GPLpicture.png");
 
     QObject::connect(this, SIGNAL(lastFilePathChanged()),
-                     this, SLOT(on_lineEditOutFile_textChanged()));
+                     this, SLOT(on_lineEditOutFile_editingFinished()));
     QObject::connect(this, SIGNAL(targetFilePathChanged()),
-                     this, SLOT(on_lineEditTargetFile_textChanged()));
+                     this, SLOT(on_lineEditTargetFile_editingFinished()));
     QObject::connect(this, SIGNAL(checkBoxToggle(bool)),
                      this, SLOT(toggleEncryptDecrypt(bool)));
     QObject::connect(_backendProcess, SIGNAL(error(QProcess::ProcessError)),
@@ -117,26 +117,6 @@ void MainWidget::decrypt()
     _backendProcess->start(_pathToBackendExec, backendParams, QIODevice::ReadWrite);
 }
 
-void MainWidget::on_lineEditOutFile_textChanged()
-{
-    if (!_targetFilePath.isEmpty()) {
-        QString outFilePath;
-#ifdef Q_OS_MSDOS
-        outFilePath = QString("%1\\%2.enc").arg(_lastFilePath).arg(_targetFileName);
-#else
-        outFilePath = QString("%1/%2.enc").arg(_lastFilePath).arg(_targetFileName);
-#endif
-        ui->lineEditOutFile->setText(outFilePath);
-    }
-}
-
-void MainWidget::on_lineEditTargetFile_textChanged()
-{
-    if (!_targetFilePath.isEmpty()) {
-        ui->lineEditTargetFile->setText(_targetFilePath);
-    }
-}
-
 void MainWidget::toggleEncryptDecrypt(bool encrypt)
 {
     if (encrypt) {
@@ -149,6 +129,7 @@ void MainWidget::toggleEncryptDecrypt(bool encrypt)
         ui->pushButtonBrowseTargetFile->setText(targetDecryptText);
         ui->pushButtonEncrypt->setText(buttonDecryptText);
     }
+    clearFields();
 }
 
 void MainWidget::notifyBackendStart()
@@ -165,6 +146,10 @@ void MainWidget::handleBackendStop(int exitCode, QProcess::ExitStatus exitStatus
 {
     qDebug() << QString("[backendMonitor] process exited with code %1 status %1").arg(exitCode).arg(exitStatus);
     QFile::remove(_passwordFilePath);
+    if (exitCode == 0)
+    {
+        clearFields();
+    }
 }
 
 void MainWidget::on_comboBoxEncryptDecrypt_currentIndexChanged(int index)
@@ -178,4 +163,35 @@ void MainWidget::on_comboBoxEncryptDecrypt_currentIndexChanged(int index)
         _encryptEnabled = false;
     }
     emit checkBoxToggle(_encryptEnabled);
+}
+
+void MainWidget::on_lineEditTargetFile_editingFinished()
+{
+    if (!_targetFilePath.isEmpty()) {
+        ui->lineEditTargetFile->setText(_targetFilePath);
+    }
+}
+
+void MainWidget::on_lineEditOutFile_editingFinished()
+{
+    if (!_targetFilePath.isEmpty()) {
+        QString outFilePath;
+#ifdef Q_OS_MSDOS
+        outFilePath = QString("%1\\%2.enc").arg(_lastFilePath).arg(_targetFileName);
+#else
+        outFilePath = QString("%1/%2.enc").arg(_lastFilePath).arg(_targetFileName);
+#endif
+        ui->lineEditOutFile->setText(outFilePath);
+    }
+}
+
+void MainWidget::clearFields()
+{
+    ui->lineEditOutFile->clear();
+    ui->lineEditPassPhrase->clear();
+    ui->lineEditTargetFile->clear();
+    _targetFilePath.clear();
+    _passwordFilePath.clear();
+    _outputFilePath.clear();
+    _lastFilePath.clear();
 }

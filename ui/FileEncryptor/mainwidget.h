@@ -32,6 +32,8 @@ protected:
 
     bool _encryptEnabled;
 
+    void clearFields();
+
     // === backend support ===
     QProcess *_backendProcess;
     QString _pathToBackendExec;
@@ -41,9 +43,9 @@ private slots:
 
     void on_pushButtonEncrypt_clicked();
 
-    void on_lineEditOutFile_textChanged();
+    void on_lineEditTargetFile_editingFinished();
 
-    void on_lineEditTargetFile_textChanged();
+    void on_lineEditOutFile_editingFinished();
 
     void on_comboBoxEncryptDecrypt_currentIndexChanged(int index);
 
