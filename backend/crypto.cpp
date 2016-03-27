@@ -68,14 +68,24 @@ int decrypt_file(char const* in_file, char const* out_file, char const* pass_fil
     // make key from password file
     std::string key = password_to_key(pass_file);
 
-    // perform decryption and write decrypted text
-    CryptoPP::AES::Decryption aesDecryption((byte*)key.data(), KEY_LENGTH);
-    CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption, iv);
-    CryptoPP::FileSource file_source(fin, true,
-        new CryptoPP::StreamTransformationFilter(cbcDecryption,
-            new CryptoPP::FileSink(out_file)
-        )
-    );
+    try
+    {
+        // perform decryption and write decrypted text
+        CryptoPP::AES::Decryption aesDecryption((byte*)key.data(), KEY_LENGTH);
+        CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption, iv);
+        CryptoPP::FileSource file_source(fin, true,
+            new CryptoPP::StreamTransformationFilter(cbcDecryption,
+                new CryptoPP::FileSink(out_file)
+            )
+        );
+    }
+    // generally this means incorrect password for given file
+    // (or whatever password for given broken file)
+    catch(CryptoPP::InvalidCiphertext ic)
+    {
+        // TODO: make nice return values
+        return -2;
+    }
 
     // finish
     fin.close();
